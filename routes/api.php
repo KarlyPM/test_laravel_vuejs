@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PersonaController;
+use App\Http\Controllers\UserController;
 
 
 /*
@@ -15,9 +15,14 @@ use App\Http\Controllers\PersonaController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('user', [PersonaController::class, 'store']);
-Route::get('users', [PersonaController::class, 'index'])->middleware('auth:api');
-Route::put('user/{id}', [PersonaController::class, 'update']);
-Route::get('user/{id}', [PersonaController::class, 'show']);
-Route::delete('user/{id}', [PersonaController::class, 'destroy']);
+Route::post('user', [UserController::class, 'store']);
+Route::get('users', [UserController::class, 'index']);
+Route::put('user/{id}', [UserController::class, 'update']);
+Route::get('user/{id}', [UserController::class, 'show']);
+Route::delete('user/{id}', [UserController::class, 'destroy']);
 
+//Ejemplo de ruta protegida
+Route::middleware('auth:api')->group( function () {
+    Route::get('users-protected', [UserController::class, 'index']);
+});
+    

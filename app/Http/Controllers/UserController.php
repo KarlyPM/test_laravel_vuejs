@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Controllers\Controller;
 use App\User;
-use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 
 
-class PersonaController extends Controller
+class UserController extends Controller
 {
     public function index()
     {
@@ -35,14 +36,13 @@ class PersonaController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json($validator->errors());
-
+            return response()->json($validator->errors(), 400);
         }
-        $user = User::create($request->all() );
 
+        $user = User::create($request->all() );
         $token = $user->createToken('token')->accessToken;
 
-        return response()->json(['token' => $token, 'persona' => $user ], 200);
+        return response()->json(['token' => $token, 'user' => $user ], 200);
 
     }
 
@@ -50,20 +50,19 @@ class PersonaController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required',
-            'apellidos' => 'required',
-            'cedula' => 'required|unique:users',
+            'apellidos' => 'required',            
+            'cedula' => ["required",Rule::unique('users')->ignore($id)],
             'celular' => 'required',
             'ciudad' => 'required',
         ]);
 
 
         if ($validator->fails()) {
-            return response()->json($validator->errors());
+            return response()->json($validator->errors(), 400);
 
         }
 
         $person=User::find($id);
-
         $person->update($request->all());
         return response()->json($person, 200);
     }
@@ -71,7 +70,6 @@ class PersonaController extends Controller
 
     public function destroy($id)
     {
-
         DB::table('users')->where('id', $id)->delete();
         return response()->json('Eliminado satisfactoriamente', 200);
     }
@@ -86,3 +84,4 @@ class PersonaController extends Controller
 
 
 }
+

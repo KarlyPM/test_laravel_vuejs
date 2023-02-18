@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -17,7 +16,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'nombre','apellidos','cedula','celular','ciudad'
+        'nombre',
+        'apellidos',
+        'cedula',
+        'celular',
+        'ciudad'
     ];
 
     /**
@@ -25,9 +28,9 @@ class User extends Authenticatable
      *
      * @var array
      */
-   /* protected $hidden = [
-        'password', 'remember_token',
-    ];*/
+    protected $hidden = [
+        'remember_token',
+    ];
 
     /**
      * The attributes that should be cast to native types.
